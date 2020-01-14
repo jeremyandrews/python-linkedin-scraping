@@ -3,11 +3,11 @@ My Tool does one thing, and one thing well.
 """
 from setuptools import find_packages, setup
 
-dependencies = ['click', 'dpath', 'scrapy', 'tablib']
+dependencies = ['click', 'dpath', 'scrapy', 'tablib', 'bleach']
 
 setup(
     name='linkedin-scraping',
-    version='0.1.1',
+    version='0.2.0',
     url='http://gogs.pyango.ch/cwirz/python-linkedin-scraping.git',
     license='BSD',
     author='Colin Wirz',

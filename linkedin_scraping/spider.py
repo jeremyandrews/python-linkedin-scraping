@@ -6,7 +6,7 @@ import tablib
 from scrapy.spiders.init import InitSpider
 from scrapy.http import Request, FormRequest
 from .items import User
-from parser import strip_tags
+from bleach import clean
 
 
 class LinkedInPeopleSpider(InitSpider):
@@ -42,8 +42,8 @@ class LinkedInPeopleSpider(InitSpider):
         else:
             # Something went wrong, we couldn't log in, so nothing happens.
             self.log("\n\n\nFailed, Bad times :(\n\n\n")
-            print self.username
-            print "Login failed!"
+            print(self.username)
+            print("Login failed!")
 
     def make_dataset(self):
         self.dataset = tablib.Dataset()
@@ -69,7 +69,7 @@ class LinkedInPeopleSpider(InitSpider):
 
             # Try to split the position and company
             if person_dict.get("fmt_headline", None):
-                position_company = strip_tags(person_dict["fmt_headline"])
+                position_company = clean(person_dict["fmt_headline"], strip=True)
                 if " bei " in position_company:
                     position_company = position_company.partition(" bei ")
                 else:

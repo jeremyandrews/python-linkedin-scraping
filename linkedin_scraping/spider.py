@@ -17,7 +17,7 @@ class LinkedInPeopleSpider(InitSpider):
 
     def __init__(self, username='', password='', keyword='', *args, **kwargs):
         super(LinkedInPeopleSpider, self).__init__(*args, **kwargs)
-        self.start_urls = ["https://www.linkedin.com/vsearch/fj?keywords={}".format(keyword)]
+        self.start_urls = ["https://www.linkedin.com/search/results/all/?groups=[]&keywords={}&origin=GLOBAL_SEARCH_HEADER&page=1&refresh=false&skillExplicit=[]&topic=[]".format(keyword)]
         self.username = username
         self.password = password
 
@@ -34,8 +34,10 @@ class LinkedInPeopleSpider(InitSpider):
         )
 
     def check_login_response(self, response):
-        # Check the response returned by a login request to see if we aresuccessfully logged in.
-        if "Sign Out" in response.body:
+        print("RESPONSE:", response)
+
+        # Check the response url to see if we are successfully logged in
+        if response.url == "https://www.linkedin.com/feed/":
             self.log("\n\n\nSuccessfully logged in. Let's start crawling!\n\n\n")
             # Now the crawling can begin.
             return self.initialized()
@@ -52,6 +54,8 @@ class LinkedInPeopleSpider(InitSpider):
     def parse(self, response):
         self.log("\n\n\n We got data! \n\n\n")
         self.make_dataset()
+        print("SEARCH RESPONSE:", response)
+        print("SEARCH RESPONSE BODY:", response.body)
         json_response = json.loads(response.body)
         f = open(os.getcwd() + '/linkedin_users.csv', 'w')
         for person in dpath.util.get(json_response, '/content/page/voltron_unified_search_json/search/results'):
